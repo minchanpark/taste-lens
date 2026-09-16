@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
+    "fastapi:dev": "uvicorn api.index:app --reload --port 8000",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
+    "test:python": "pytest api/tests",
     "test:e2e": "playwright test",
     "test:integration": "tsx --test tests/*.integration.ts"
   },
