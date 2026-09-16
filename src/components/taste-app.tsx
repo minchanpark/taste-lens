@@ -51,7 +51,21 @@ import {
 import Radar from "./radar";
 import DeliveryHome from "./delivery-home";
 import DeliveryCart from "./delivery-cart";
+import ReviewModal from "./review-modal";
 import { foodPhoto, type Cart, type Checkout } from "@/lib/delivery";
+import { apiClient } from "@/lib/api";
+
+const CATEGORY_COLORS: Record<string, string> = {
+  "한식": "#fed7aa",
+  "중식": "#fca5a5",
+  "일식": "#c7d2fe",
+  "양식": "#fde68a",
+  "분식": "#fdba74",
+  "아시안": "#99f6e4",
+  "패스트푸드": "#fef08a",
+  "샐러드": "#86efac",
+};
+
 type Profile = {
   vector: Vector;
   source: string;
@@ -94,7 +108,16 @@ export default function TasteApp() {
     [completedCheckout, setCompletedCheckout] = useState<Checkout | null>(null),
     [mode, setMode] = useState<"delivery" | "pickup">("delivery"),
     [locationOpen, setLocationOpen] = useState(false),
-    [checkouts, setCheckouts] = useState<Checkout[]>([]);
+    [checkouts, setCheckouts] = useState<Checkout[]>([]),
+    [reviewOrder, setReviewOrder] = useState<{
+      orderId: string;
+      foodId: string;
+      foodName: string;
+      menuId: string;
+      menuName: string;
+      restaurantId: string;
+      restaurantName: string;
+    } | null>(null);
   const checkoutId = useRef<string | null>(null);
   function changeMode(next: "delivery" | "pickup") {
     setMode(next);
@@ -237,41 +260,81 @@ export default function TasteApp() {
     setOrders(o.data || []);
   }, []);
   useEffect(() => {
-    if (!supabase) {
-      setError(
-        "Supabase 연결 설정이 필요합니다. .env.local 파일을 확인해 주세요.",
-      );
-      setLoading(false);
-      return;
-    }
     let alive = true;
-    Promise.all([
-      supabase.from("tl_foods").select("*").order("id"),
-      supabase.auth.getUser(),
-    ])
-      .then(async ([f, u]) => {
-        if (!alive) return;
-        if (f.error) throw f.error;
-        setFoods(f.data || []);
-        await loadUser(u.data.user);
-      })
-      .catch((e) => {
-        if (alive) setError(errorText(e));
-      })
-      .finally(() => {
-        if (alive) setLoading(false);
-      });
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT") {
-        setUser(null);
-        setProfile(null);
-        setOrders([]);
-        setCheckouts([]);
+    async function initializeApp() {
+      let foodsList: Food[] = [];
+      let currentUser: User | null = null;
+
+      if (supabase) {
+        try {
+          const [f, u] = await Promise.all([
+            supabase.from("tl_foods").select("*").order("id"),
+            supabase.auth.getUser(),
+          ]);
+          if (!f.error && f.data && f.data.length > 0) {
+            foodsList = f.data;
+          }
+          if (u.data?.user) {
+            currentUser = u.data.user;
+          }
+        } catch (err) {
+          console.warn("Supabase initial load error:", err);
+        }
       }
-      if (event === "SIGNED_IN") setUser(session?.user || null);
-    });
+
+      if (!foodsList.length) {
+        try {
+          const apiFoods = await apiClient.getFoods();
+          if (apiFoods && apiFoods.length > 0) {
+            foodsList = apiFoods.map((af) => ({
+              id: af.id,
+              name: af.name,
+              category: af.category,
+              emoji: af.emoji,
+              description: af.description,
+              vector: af.vector,
+              color: CATEGORY_COLORS[af.category] || "#fed7aa",
+              vector_version: "v4.3",
+            }));
+          }
+        } catch (apiErr) {
+          console.warn("apiClient.getFoods fallback error:", apiErr);
+        }
+      }
+
+      if (!alive) return;
+      if (foodsList.length > 0) {
+        setFoods(foodsList);
+      } else {
+        setError("음식 목록을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.");
+      }
+
+      if (currentUser) {
+        try {
+          await loadUser(currentUser);
+        } catch (err) {
+          console.warn("Error loading user profile:", err);
+        }
+      }
+      setLoading(false);
+    }
+
+    initializeApp();
+    let subscription: { unsubscribe: () => void } | null = null;
+    if (supabase) {
+      const {
+        data: { subscription: sub },
+      } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === "SIGNED_OUT") {
+          setUser(null);
+          setProfile(null);
+          setOrders([]);
+          setCheckouts([]);
+        }
+        if (event === "SIGNED_IN") setUser(session?.user || null);
+      });
+      subscription = sub;
+    }
     const stored = localStorage.getItem("taste-context");
     if (stored) {
       try {
@@ -289,7 +352,7 @@ export default function TasteApp() {
     );
     return () => {
       alive = false;
-      subscription.unsubscribe();
+      subscription?.unsubscribe();
       clearInterval(timer);
     };
   }, [loadUser]);
@@ -485,15 +548,47 @@ export default function TasteApp() {
     setError("");
     setMenuLoading(true);
     try {
-      const { data, error } = await supabase!
-        .from("tl_menus")
-        .select("*")
-        .eq("food_id", food.id);
-      if (error) throw error;
-      setMenus(data || []);
-      if (!user || !profile) return;
-      const ranked = rank((data || []) as Menu[], vector);
-      const result = await supabase!.from("tl_recommendations").insert({
+      let loadedMenus: Menu[] = [];
+      if (supabase) {
+        try {
+          const { data, error } = await supabase
+            .from("tl_menus")
+            .select("*")
+            .eq("food_id", food.id);
+          if (!error && data && data.length > 0) {
+            loadedMenus = data;
+          }
+        } catch (e) {
+          console.warn("Supabase tl_menus query failed", e);
+        }
+      }
+
+      if (!loadedMenus.length) {
+        try {
+          const ranked = await apiClient.recommendRestaurants(vector, food.id);
+          if (ranked && ranked.length > 0) {
+            loadedMenus = ranked.map((item) => ({
+              id: item.menu.id,
+              food_id: item.menu.food_id,
+              name: `${item.restaurant.name} ${item.menu.name}`,
+              price: item.menu.price,
+              rating: item.restaurant.rating,
+              vector: item.menu.vector,
+              claims: [],
+              source_type: "v4.3",
+              evidence_count: 0,
+              description: item.menu.description || `${item.restaurant.name}의 대표 메뉴`,
+            }));
+          }
+        } catch (apiErr) {
+          console.warn("apiClient.recommendRestaurants fallback failed", apiErr);
+        }
+      }
+
+      setMenus(loadedMenus);
+      if (!user || !profile || !supabase || !loadedMenus.length) return;
+      const ranked = rank(loadedMenus as Menu[], vector);
+      await supabase.from("tl_recommendations").insert({
         user_id: user!.id,
         kind: "restaurant",
         candidates: ranked.map((m, i) => ({
@@ -504,7 +599,6 @@ export default function TasteApp() {
         context,
         vector,
       });
-      if (result.error) setNotice("식당 추천 기록 저장에 실패했어요.");
     } catch (e) {
       setError(errorText(e));
     } finally {
@@ -908,12 +1002,32 @@ export default function TasteApp() {
                                       </small>
                                     </>
                                   )}
-                                  <button
-                                    className="outline"
-                                    onClick={() => f && openFood(f)}
-                                  >
-                                    다시 담기
-                                  </button>
+                                  <div style={{ display: "flex", gap: "6px", marginTop: "6px" }}>
+                                    <button
+                                      className="outline"
+                                      onClick={() => f && openFood(f)}
+                                    >
+                                      다시 담기
+                                    </button>
+                                    <button
+                                      className="primary"
+                                      style={{ padding: "8px 12px", fontSize: "11px", gap: "6px" }}
+                                      onClick={() => {
+                                        const chk = checkouts.find((c) => c.id === o.id);
+                                        setReviewOrder({
+                                          orderId: o.id,
+                                          foodId: o.food_id,
+                                          foodName: f?.name || "선택한 메뉴",
+                                          menuId: o.menu_id || chk?.menu_id || `menu_${o.food_id}`,
+                                          menuName: f?.name || "대표 메뉴",
+                                          restaurantId: "r_default",
+                                          restaurantName: "주문 매장",
+                                        });
+                                      }}
+                                    >
+                                      리뷰 작성
+                                    </button>
+                                  </div>
                                 </div>
                               </article>
                             );
@@ -1198,6 +1312,19 @@ export default function TasteApp() {
                 closeModal();
                 setView("history");
               }}
+              onReview={(completed) => {
+                closeModal();
+                const f = foods.find((food) => food.id === completed.food_id);
+                setReviewOrder({
+                  orderId: completed.id,
+                  foodId: completed.food_id,
+                  foodName: f?.name || "주문 메뉴",
+                  menuId: completed.menu_id,
+                  menuName: f?.name || "대표 메뉴",
+                  restaurantId: "r_default",
+                  restaurantName: "주문 매장",
+                });
+              }}
             />
           )}
           {locationOpen && (
@@ -1390,6 +1517,24 @@ export default function TasteApp() {
           )}
         </div>
       </dialog>
+      {reviewOrder && (
+        <ReviewModal
+          isOpen={!!reviewOrder}
+          onClose={() => setReviewOrder(null)}
+          restaurantId={reviewOrder.restaurantId}
+          restaurantName={reviewOrder.restaurantName}
+          menuId={reviewOrder.menuId}
+          menuName={reviewOrder.menuName}
+          orderId={reviewOrder.orderId}
+          currentUserVector={vector}
+          onUserVectorUpdated={(newVector) => {
+            if (profile) {
+              setProfile({ ...profile, vector: newVector });
+            }
+            setNotice("리뷰 분석 완료: Solar Pro 4 미각 학습 결과가 취향 벡터에 즉시 반영되었습니다.");
+          }}
+        />
+      )}
     </div>
   );
 }

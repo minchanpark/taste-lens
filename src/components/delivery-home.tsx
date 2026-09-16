@@ -31,6 +31,7 @@ import {
   type Context,
 } from "@/lib/taste";
 import { foodPhoto, money, deliveryMinutes } from "@/lib/delivery";
+import { apiClient } from "@/lib/api";
 type Props = {
   foods: Food[];
   vector: Vector;
@@ -51,6 +52,7 @@ type Props = {
   onMode: (mode: "delivery" | "pickup") => void;
   category: string;
   onCategory: (category: string) => void;
+  recommendationId?: string | null;
   feedback: string | null;
   onFeedback: (answer: string) => void;
   busy: boolean;
@@ -58,12 +60,12 @@ type Props = {
 const categories = [
   ["전체", "🍽️"],
   ["한식", "🍚"],
-  ["치킨", "🍗"],
-  ["분식", "🌶️"],
   ["중식", "🥡"],
   ["일식", "🍣"],
   ["양식", "🍕"],
+  ["분식", "🌶️"],
   ["아시안", "🍜"],
+  ["패스트푸드", "🍔"],
   ["샐러드", "🥗"],
 ];
 export default function DeliveryHome(p: Props) {
@@ -77,17 +79,57 @@ export default function DeliveryHome(p: Props) {
     [catalogError, setCatalogError] = useState("");
   useEffect(() => {
     let live = true;
-    supabase
-      ?.from("tl_menus")
-      .select("*")
-      .then(({ data, error }) => {
-        if (!live) return;
-        if (error)
-          setCatalogError(
-            "가게 목록을 불러오지 못했어요. 새로고침 후 다시 시도해 주세요.",
-          );
-        else setCatalog(data || []);
-      });
+    async function loadCatalog() {
+      let loaded: Menu[] = [];
+      if (supabase) {
+        try {
+          const { data, error } = await supabase.from("tl_menus").select("*");
+          if (!error && data && data.length > 0) {
+            loaded = data;
+          }
+        } catch (e) {
+          console.warn("Supabase tl_menus query failed", e);
+        }
+      }
+      if (!loaded.length) {
+        try {
+          const rests = await apiClient.getRestaurants();
+          const allMenus: Menu[] = [];
+          for (const r of rests.slice(0, 15)) {
+            try {
+              const detail = await apiClient.getRestaurantDetail(r.id);
+              if (detail?.menus) {
+                for (const m of detail.menus) {
+                  allMenus.push({
+                    id: m.id,
+                    food_id: m.food_id,
+                    name: `${r.name} ${m.name}`,
+                    price: m.price,
+                    rating: r.rating,
+                    vector: m.vector,
+                    claims: [],
+                    source_type: "v4.3",
+                    evidence_count: 0,
+                    description: m.description,
+                  });
+                }
+              }
+            } catch {}
+          }
+          if (allMenus.length > 0) loaded = allMenus;
+        } catch (e) {
+          console.warn("Catalog fetch error", e);
+        }
+      }
+      if (!live) return;
+      if (loaded.length > 0) {
+        setCatalog(loaded);
+        setCatalogError("");
+      } else if (!supabase) {
+        setCatalogError("가게 목록을 불러오지 못했어요.");
+      }
+    }
+    loadCatalog();
     try {
       const saved = JSON.parse(
         localStorage.getItem("tl-favorite-menus") || "[]",

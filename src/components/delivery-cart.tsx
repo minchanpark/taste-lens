@@ -26,6 +26,7 @@ export default function DeliveryCart({
   onCheckout,
   onBrowse,
   onHistory,
+  onReview,
 }: {
   cart: Cart | null;
   pending: Cart | null;
@@ -41,6 +42,7 @@ export default function DeliveryCart({
   onCheckout: () => void;
   onBrowse: () => void;
   onHistory: () => void;
+  onReview?: (checkout: Checkout) => void;
 }) {
   if (pending)
     return (
@@ -98,6 +100,15 @@ export default function DeliveryCart({
         <button className="primary full" onClick={onHistory}>
           주문내역 보기 <ArrowRight size={16} />
         </button>
+        {onReview && (
+          <button
+            className="outline full"
+            style={{ marginTop: 8 }}
+            onClick={() => onReview(completed)}
+          >
+            방금 주문한 메뉴 리뷰 작성하기
+          </button>
+        )}
         <button className="text-button" onClick={onBrowse}>
           맛있는 메뉴 더 둘러보기
         </button>
