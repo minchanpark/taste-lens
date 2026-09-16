@@ -104,3 +104,38 @@ def test_taste_match_endpoint():
     assert "match_percentage" in data
     assert "distance" in data
     assert "reason" in data
+
+def test_catalog_foods_and_categories():
+    res_foods = client.get("/api/foods")
+    assert res_foods.status_code == 200
+    foods = res_foods.json()
+    assert len(foods) == 70
+
+    res_cats = client.get("/api/categories")
+    assert res_cats.status_code == 200
+    cats = res_cats.json()
+    assert len(cats) == 8
+
+def test_catalog_restaurants_and_menus():
+    res_rests = client.get("/api/restaurants")
+    assert res_rests.status_code == 200
+    rests = res_rests.json()
+    assert len(rests) == 41
+
+    first_id = rests[0]["id"]
+    res_detail = client.get(f"/api/restaurants/{first_id}")
+    assert res_detail.status_code == 200
+    detail = res_detail.json()
+    assert "menus" in detail
+    assert len(detail["menus"]) >= 4
+
+def test_recommendations_ranking():
+    res = client.post(
+        "/api/recommendations/foods",
+        json={"user_vector": [0.2, 0.7, 0.6, 0.8, 0.7, 0.2], "category": "한식", "limit": 5}
+    )
+    assert res.status_code == 200
+    recs = res.json()
+    assert len(recs) == 5
+    assert recs[0]["category"] == "한식"
+    assert recs[0]["match_percentage"] >= recs[1]["match_percentage"]

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.config import settings
-from api.routes import health, weather, taste
+from api.routes import health, weather, taste, catalog
 
 app = FastAPI(
     title="Taste Lens API",
@@ -25,6 +25,7 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(weather.router)
 app.include_router(taste.router)
+app.include_router(catalog.router)
 
 @app.get("/api")
 async def root():
