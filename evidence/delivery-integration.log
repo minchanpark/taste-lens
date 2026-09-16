@@ -1,0 +1,26 @@
+
+> taste-lens@0.1.0 test:integration
+> tsx --test tests/*.integration.ts
+
+TAP version 13
+# Subtest: checkout derives prices on server, saves quantity, rejects invalid quantities and keeps users isolated
+ok 1 - checkout derives prices on server, saves quantity, rejects invalid quantities and keeps users isolated
+  ---
+  duration_ms: 1457.303667
+  type: 'test'
+  ...
+# Subtest: real Supabase catalog permissions, ownership RLS, vector validation, atomic order idempotency
+ok 2 - real Supabase catalog permissions, ownership RLS, vector validation, atomic order idempotency
+  ---
+  duration_ms: 1589.18125
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1769.024208

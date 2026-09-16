@@ -1,0 +1,242 @@
+[
+  {
+    "id": "jeyuk",
+    "name": "제육볶음",
+    "category": "한식",
+    "emoji": "🥘",
+    "description": "불향 가득, 매콤한 한 입",
+    "vector": [0.55, 0.65, 0.1, 0.8, 0.75, 0.4],
+    "color": "#fae4d5",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "bulgogi",
+    "name": "불고기",
+    "category": "한식",
+    "emoji": "🥩",
+    "description": "달큰한 양념과 부드러운 소고기",
+    "vector": [0.8, 0.55, 0.05, 0.8, 0.05, 0.4],
+    "color": "#f2e7d8",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "gukbap",
+    "name": "돼지국밥",
+    "category": "한식",
+    "emoji": "🍲",
+    "description": "속까지 든든해지는 깊은 국물",
+    "vector": [0.05, 0.55, 0.05, 0.9, 0.1, 0.55],
+    "color": "#e5eadb",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "ramen",
+    "name": "라멘",
+    "category": "일식",
+    "emoji": "🍜",
+    "description": "진한 육수에 감칠맛이 차곡차곡",
+    "vector": [0.15, 0.85, 0.05, 0.95, 0.15, 0.55],
+    "color": "#f5e8ce",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "porridge",
+    "name": "전복죽",
+    "category": "한식",
+    "emoji": "🥣",
+    "description": "편안하고 담백한 한 그릇",
+    "vector": [0.1, 0.2, 0.02, 0.55, 0, 0.4],
+    "color": "#ece8e0",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "naengmyeon",
+    "name": "물냉면",
+    "category": "한식",
+    "emoji": "🧊",
+    "description": "새콤한 육수와 시원한 면발",
+    "vector": [0.35, 0.45, 0.8, 0.4, 0.1, 0.15],
+    "color": "#dfecec",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "udon",
+    "name": "우동",
+    "category": "일식",
+    "emoji": "🍜",
+    "description": "따뜻한 국물, 쫄깃한 면발",
+    "vector": [0.15, 0.5, 0.05, 0.65, 0, 0.1],
+    "color": "#fae4d5",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "kimchi",
+    "name": "김치찌개",
+    "category": "한식",
+    "emoji": "🍲",
+    "description": "칼칼하고 진한 밥 한 공기의 친구",
+    "vector": [0.1, 0.7, 0.6, 0.9, 0.7, 0.2],
+    "color": "#f2e7d8",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "salad",
+    "name": "그린 샐러드",
+    "category": "샐러드",
+    "emoji": "🥗",
+    "description": "산뜻하고 아삭한 초록 한 접시",
+    "vector": [0.15, 0.15, 0.4, 0.15, 0, 0.15],
+    "color": "#e5eadb",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "donkatsu",
+    "name": "돈카츠",
+    "category": "일식",
+    "emoji": "🍱",
+    "description": "바삭한 튀김옷 속 촉촉함",
+    "vector": [0.3, 0.45, 0.05, 0.65, 0, 0.7],
+    "color": "#f5e8ce",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "kongguksu",
+    "name": "콩국수",
+    "category": "한식",
+    "emoji": "🥛",
+    "description": "부드러운 콩의 진한 고소함",
+    "vector": [0.1, 0.15, 0.02, 0.35, 0, 0.95],
+    "color": "#ece8e0",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "pho",
+    "name": "쌀국수",
+    "category": "아시안",
+    "emoji": "🍜",
+    "description": "향긋하고 맑은 육수 한 그릇",
+    "vector": [0.2, 0.5, 0.3, 0.7, 0.1, 0.1],
+    "color": "#dfecec",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "tteokbokki",
+    "name": "떡볶이",
+    "category": "분식",
+    "emoji": "🌶️",
+    "description": "달콤하게 시작해서 매콤하게",
+    "vector": [0.8, 0.6, 0.05, 0.55, 0.85, 0.1],
+    "color": "#fae4d5",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "pizza",
+    "name": "마르게리타 피자",
+    "category": "양식",
+    "emoji": "🍕",
+    "description": "토마토와 치즈의 기분 좋은 균형",
+    "vector": [0.25, 0.65, 0.4, 0.75, 0, 0.65],
+    "color": "#f2e7d8",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "pasta",
+    "name": "크림 파스타",
+    "category": "양식",
+    "emoji": "🍝",
+    "description": "크리미하고 부드러운 여유",
+    "vector": [0.25, 0.5, 0.02, 0.65, 0.05, 0.9],
+    "color": "#e5eadb",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "burger",
+    "name": "치즈버거",
+    "category": "양식",
+    "emoji": "🍔",
+    "description": "육즙과 치즈가 만드는 꽉 찬 맛",
+    "vector": [0.4, 0.75, 0.2, 0.85, 0.05, 0.6],
+    "color": "#f5e8ce",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "chicken",
+    "name": "양념치킨",
+    "category": "치킨",
+    "emoji": "🍗",
+    "description": "바삭함에 더한 달콤 매콤한 소스",
+    "vector": [0.85, 0.6, 0.15, 0.65, 0.55, 0.5],
+    "color": "#ece8e0",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "fried-chicken",
+    "name": "후라이드 치킨",
+    "category": "치킨",
+    "emoji": "🍗",
+    "description": "바삭 고소한 클래식",
+    "vector": [0.1, 0.65, 0.02, 0.7, 0.1, 0.85],
+    "color": "#dfecec",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "bibimbap",
+    "name": "비빔밥",
+    "category": "한식",
+    "emoji": "🥗",
+    "description": "다채로운 나물에 고소한 참기름",
+    "vector": [0.2, 0.45, 0.1, 0.6, 0.4, 0.7],
+    "color": "#fae4d5",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "mala",
+    "name": "마라탕",
+    "category": "중식",
+    "emoji": "🥘",
+    "description": "얼얼하고 강렬한 국물의 매력",
+    "vector": [0.1, 0.8, 0.05, 0.85, 1, 0.55],
+    "color": "#f2e7d8",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "jjajang",
+    "name": "짜장면",
+    "category": "중식",
+    "emoji": "🍜",
+    "description": "달큰한 춘장에 볶아낸 감칠맛",
+    "vector": [0.65, 0.65, 0.02, 0.8, 0, 0.5],
+    "color": "#e5eadb",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "sushi",
+    "name": "연어초밥",
+    "category": "일식",
+    "emoji": "🍣",
+    "description": "산뜻한 밥 위 부드러운 연어",
+    "vector": [0.3, 0.4, 0.45, 0.65, 0.05, 0.5],
+    "color": "#f5e8ce",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "padthai",
+    "name": "팟타이",
+    "category": "아시안",
+    "emoji": "🍝",
+    "description": "새콤달콤한 소스와 고소한 땅콩",
+    "vector": [0.7, 0.55, 0.65, 0.65, 0.25, 0.75],
+    "color": "#ece8e0",
+    "vector_version": "taste-v1.0"
+  },
+  {
+    "id": "sundubu",
+    "name": "순두부찌개",
+    "category": "한식",
+    "emoji": "🍲",
+    "description": "부드러운 두부에 칼칼한 국물",
+    "vector": [0.1, 0.6, 0.1, 0.85, 0.7, 0.3],
+    "color": "#dfecec",
+    "vector_version": "taste-v1.0"
+  }
+]

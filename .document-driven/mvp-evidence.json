@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0",
+  "mode": "fast-mvp",
+  "stage": "demo-ready",
+  "accepted_flows": [
+    {
+      "id": "delivery-taste-checkout",
+      "requirement_ids": [
+        "FR-01",
+        "FR-02",
+        "FR-03",
+        "FR-04",
+        "FR-05",
+        "FR-06",
+        "FR-07",
+        "FR-08",
+        "FR-11",
+        "FR-12",
+        "FR-13",
+        "FR-14",
+        "FR-15",
+        "FR-16",
+        "FR-17",
+        "FR-18"
+      ],
+      "status": "passed"
+    }
+  ],
+  "verification": [
+    {
+      "id": "unit",
+      "flow_ids": [
+        "delivery-taste-checkout"
+      ],
+      "type": "unit",
+      "command": "npm test",
+      "result": "passed",
+      "exit_code": 0,
+      "executed_at": "2026-09-13T15:47:15.622679+00:00",
+      "evidence_paths": [
+        "evidence/unit-tests.log"
+      ]
+    },
+    {
+      "id": "integration",
+      "flow_ids": [
+        "delivery-taste-checkout"
+      ],
+      "type": "api-e2e",
+      "command": "npm run test:integration",
+      "result": "passed",
+      "exit_code": 0,
+      "executed_at": "2026-09-13T15:47:15.290734+00:00",
+      "evidence_paths": [
+        "evidence/delivery-integration.log"
+      ]
+    },
+    {
+      "id": "browser",
+      "flow_ids": [
+        "delivery-taste-checkout"
+      ],
+      "type": "browser-e2e",
+      "command": "npm run test:e2e",
+      "result": "passed",
+      "exit_code": 0,
+      "executed_at": "2026-09-13T15:48:07.547073+00:00",
+      "evidence_paths": [
+        "evidence/e2e-results.json"
+      ]
+    },
+    {
+      "id": "build",
+      "flow_ids": [
+        "delivery-taste-checkout"
+      ],
+      "type": "build",
+      "command": "npm run build",
+      "result": "passed",
+      "exit_code": 0,
+      "executed_at": "2026-09-13T15:47:19.465430+00:00",
+      "evidence_paths": [
+        "evidence/delivery-build.log"
+      ]
+    },
+    {
+      "id": "types",
+      "flow_ids": [
+        "delivery-taste-checkout"
+      ],
+      "type": "static-analysis",
+      "command": "npm run typecheck",
+      "result": "passed",
+      "exit_code": 0,
+      "executed_at": "2026-09-13T15:47:15.715456+00:00",
+      "evidence_paths": [
+        "evidence/typecheck.log"
+      ]
+    },
+    {
+      "id": "weather",
+      "flow_ids": [
+        "delivery-taste-checkout"
+      ],
+      "type": "api-e2e",
+      "command": "curl -fsS 'http://localhost:3000/api/weather?city=seoul'",
+      "result": "passed",
+      "exit_code": 0,
+      "executed_at": "2026-09-13T15:19:08.222868+00:00",
+      "evidence_paths": [
+        "evidence/weather.json"
+      ]
+    },
+    {
+      "id": "human-validation",
+      "flow_ids": [
+        "delivery-taste-checkout"
+      ],
+      "type": "user-attestation",
+      "result": "unavailable",
+      "executed_at": "2026-09-13T15:19:08.222868+00:00",
+      "evidence_paths": [],
+      "note": "User has not yet supplied product validation or validator identity. Email inbox delivery is also not independently verified."
+    }
+  ],
+  "validated_by": null,
+  "validated_at": null,
+  "notes": [
+    "Automated technical verification passed: 5 unit, 2 real Supabase integration and 3 browser scenarios. User acceptance pending.",
+    "Delivery UI and cart/test checkout added per user request; see docs/MVP_SCOPE.md and evidence/DELIVERY_VERIFICATION.md.",
+    "Restaurants, reviews, delivery estimates and prices are synthetic fixtures; no live delivery, payments or Solar extraction."
+  ]
+}

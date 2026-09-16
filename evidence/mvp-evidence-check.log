@@ -1,0 +1,3 @@
+ERROR: MVP evidence invalid:
+- mvp-evidence.json validated_by is required
+- mvp-evidence.json validated_at is required

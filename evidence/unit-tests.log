@@ -1,0 +1,44 @@
+
+> taste-lens@0.1.0 test
+> tsx --test tests/*.test.ts
+
+TAP version 13
+# Subtest: RMS distance has expected endpoints and ranking is stable
+ok 1 - RMS distance has expected endpoints and ranking is stable
+  ---
+  duration_ms: 0.80425
+  type: 'test'
+  ...
+# Subtest: 10 questions cover all axes, refine without duplicate pairs, and produce bounded reproducible profile
+ok 2 - 10 questions cover all axes, refine without duplicate pairs, and produce bounded reproducible profile
+  ---
+  duration_ms: 4.767542
+  type: 'test'
+  ...
+# Subtest: zero context data or one identical context preserves base; diversified data uses shrinkage
+ok 3 - zero context data or one identical context preserves base; diversified data uses shrinkage
+  ---
+  duration_ms: 0.273416
+  type: 'test'
+  ...
+# Subtest: restaurant ties stay neutral, missing evidence falls back, sparse evidence is shrunk
+ok 4 - restaurant ties stay neutral, missing evidence falls back, sparse evidence is shrunk
+  ---
+  duration_ms: 0.191917
+  type: 'test'
+  ...
+# Subtest: Korean time segmentation handles midnight and lunch independently of runtime timezone
+ok 5 - Korean time segmentation handles midnight and lunch independently of runtime timezone
+  ---
+  duration_ms: 12.240542
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 131.05975

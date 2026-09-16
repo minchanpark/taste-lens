@@ -1,0 +1,10 @@
+
+Running 3 tests using 1 worker
+
+(node:36569) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/service-buttons.spec.ts:4:7 › service buttons open matching stores and update cart fees at 319px (5.4s)
+  ✓  2 tests/service-buttons.spec.ts:4:7 › service buttons open matching stores and update cart fees at 390px (7.7s)
+  ✓  3 tests/service-buttons.spec.ts:4:7 › service buttons open matching stores and update cart fees at 1280px (7.7s)
+
+  3 passed (21.6s)
